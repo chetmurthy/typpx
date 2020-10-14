@@ -1,5 +1,6 @@
 _build
 .hg*
+.merlin
 *.cm*
 *.o
 *.a
