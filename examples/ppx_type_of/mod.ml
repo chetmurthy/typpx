@@ -4,12 +4,7 @@ open Typedtree
 module MapArg : TypedtreeMap.MapArgument = struct
   include TypedtreeMap.DefaultMapArgument
 
-  let enter_structure st =
-    Fmt.(pf stderr "structure: %a\n%!" Printtyped2.implementation st) ;
-    st
-
   let enter_expression e =
-    Fmt.(pf stderr "expression: %a\n%!" (Printtyped2.expression 0) e) ;
     match e.exp_desc with
     | Texp_apply ({ exp_desc= Texp_ident(Pdot(Pident {Ident.name= "Ppx_type_of"}, "type_of", _), _, _) }, args) ->
         begin match args with

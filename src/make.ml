@@ -166,7 +166,7 @@ end) = struct
 
   let debug = ref false
   let opt_debug = ( "-debug", Arg.Set debug, "ppx debug mode" )
-
+(*
   (* Some command line argument hack *)
   let check_debug () =
     let options' =
@@ -176,7 +176,7 @@ end) = struct
       (Printf.sprintf "%s [options] <input ast file> <output ast file>" name);
     Arg.current := 0; (* reset for the next Arg.parse *)
     !debug
-
+*)
   let register () = 
     Driver.register
       ~name
@@ -190,7 +190,10 @@ end) = struct
       ~args:(opt_debug :: options)
       Versions.ocaml_current
       (fun _ _ -> make_mapper ());
+(*
     if check_debug () then Migrate_parsetree.Driver.run_main ()
-    else Driver.run_as_ppx_rewriter ()
+    else
+*)
+ Driver.run_as_ppx_rewriter ()
 
 end

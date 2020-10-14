@@ -6,3 +6,6 @@ include Typpx.Make.F(struct
   module TypedTransformation = Mod.Map
   let lastUntypedTransformation = Typpx.Default.untyped_identity
 end)
+;;
+legacy_main()
+;;
