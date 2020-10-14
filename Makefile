@@ -10,6 +10,7 @@ uninstall::
 
 clean::
 	dune clean
+	for i in $(TESTDIRS); do make -C examples/$$i/tests clean ; done
 
 TESTDIRS=ppx_curried_constr ppx_overload ppx_type_of
 
