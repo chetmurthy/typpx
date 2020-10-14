@@ -1,3 +1,8 @@
+NOTE: this is a copy of Jun Furuse's `typpx` project, and the only
+reason I'm doing this is that I can't contact Jun and find out if
+they're still maintaining their project.  If I find out that `typpx`
+is still actively maintained, this will disappear.
+
 # TyPPX: Library for PPX with Types
 
 TyPPX is a library to build PPX'es with types.  Typing the input Parsetree
