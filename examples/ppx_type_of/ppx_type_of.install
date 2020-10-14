@@ -1,0 +1,23 @@
+lib: [
+  "_build/install/default/lib/ppx_type_of/META" {"META"}
+  "_build/install/default/lib/ppx_type_of/opam" {"opam"}
+  "_build/install/default/lib/ppx_type_of/ppx_type_of__Mod.cmi"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of__Mod.cmx"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of__Mod.cmt"
+  "_build/install/default/lib/ppx_type_of/mod.ml"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of__Ppx.cmi"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of__Ppx.cmx"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of__Ppx.cmt"
+  "_build/install/default/lib/ppx_type_of/ppx.ml"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.cmi"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.cmx"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.cmt"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.ml-gen"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.cma"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.cmxa"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.a"
+  "_build/install/default/lib/ppx_type_of/ppx_type_of.cmxs"
+]
+libexec: [
+  "_build/install/default/lib/ppx_type_of/ppx.exe"
+]

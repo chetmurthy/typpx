@@ -1,0 +1,33 @@
+lib: [
+  "_build/install/default/lib/ppx_curried_constr/META" {"META"}
+  "_build/install/default/lib/ppx_curried_constr/opam" {"opam"}
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typeclass.cmi"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typeclass.cmx"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typeclass.cmt"
+  "_build/install/default/lib/ppx_curried_constr/my_typeclass.ml"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typecore.cmi"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typecore.cmx"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typecore.cmt"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typecore.cmti"
+  "_build/install/default/lib/ppx_curried_constr/my_typecore.mli"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typemod.cmi"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typemod.cmx"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typemod.cmt"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__My_typemod.cmti"
+  "_build/install/default/lib/ppx_curried_constr/my_typemod.mli"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__Ppx.cmi"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__Ppx.cmx"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr__Ppx.cmt"
+  "_build/install/default/lib/ppx_curried_constr/ppx.ml"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.cmi"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.cmx"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.cmt"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.ml-gen"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.cma"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.cmxa"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.a"
+  "_build/install/default/lib/ppx_curried_constr/ppx_curried_constr.cmxs"
+]
+libexec: [
+  "_build/install/default/lib/ppx_curried_constr/ppx.exe"
+]

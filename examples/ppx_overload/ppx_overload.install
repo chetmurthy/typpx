@@ -1,0 +1,27 @@
+lib: [
+  "_build/install/default/lib/ppx_overload/META" {"META"}
+  "_build/install/default/lib/ppx_overload/opam" {"opam"}
+  "_build/install/default/lib/ppx_overload/ppx_overload__Mod.cmi"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Mod.cmx"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Mod.cmt"
+  "_build/install/default/lib/ppx_overload/mod.ml"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Ppx.cmi"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Ppx.cmx"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Ppx.cmt"
+  "_build/install/default/lib/ppx_overload/ppx.ml"
+  "_build/install/default/lib/ppx_overload/ppx_overload.cmi"
+  "_build/install/default/lib/ppx_overload/ppx_overload.cmx"
+  "_build/install/default/lib/ppx_overload/ppx_overload.cmt"
+  "_build/install/default/lib/ppx_overload/ppx_overload.ml-gen"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Sugar.cmi"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Sugar.cmx"
+  "_build/install/default/lib/ppx_overload/ppx_overload__Sugar.cmt"
+  "_build/install/default/lib/ppx_overload/sugar.ml"
+  "_build/install/default/lib/ppx_overload/ppx_overload.cma"
+  "_build/install/default/lib/ppx_overload/ppx_overload.cmxa"
+  "_build/install/default/lib/ppx_overload/ppx_overload.a"
+  "_build/install/default/lib/ppx_overload/ppx_overload.cmxs"
+]
+libexec: [
+  "_build/install/default/lib/ppx_overload/ppx.exe"
+]
