@@ -3,4 +3,4 @@
  (public_name typpx)
  (preprocess
   (pps ppx_tools_versioned.metaquot_406))
- (libraries compiler-libs.common ocaml-migrate-parsetree ppxx))
+ (libraries compiler-libs.common ocaml-migrate-parsetree fmt))

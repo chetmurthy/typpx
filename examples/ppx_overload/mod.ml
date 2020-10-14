@@ -1,4 +1,3 @@
-open Ppxx.Compilerlib 
 open Types
 open Typedtree
 
@@ -58,7 +57,7 @@ let resolve_overloading exp lidloc path =
       find_candidates path moddecl.Types.md_type @ st) lid_opt env []
   with
   | [] -> 
-     Location.raise_errorf ~loc:lidloc.loc "Overload resolution failed: no match"
+     Location.raise_errorf ~loc:lidloc.Asttypes.loc "Overload resolution failed: no match"
   | [path, vdesc] -> 
       (* Format.eprintf "RESOLVED: %a@." print_path path; *)
       let ity = Ctype.instance env vdesc.val_type in

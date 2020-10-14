@@ -5,8 +5,6 @@
    to Parsetree immediately.
 *)
 open Typedtree
-open Ppxx.Compilerlib
-open Ppxx.Utils
 open List
 open Asttypes
 
@@ -133,10 +131,10 @@ module Exp = struct
       match (Ctype.repr cdesc.cstr_res).desc with
       | Tconstr (p, _, _) when p = path -> ()
       | _ -> 
-          Format.eprintf "Typpx.Forge.Exp: %a is not accessible in this scope@." Longident.format lid;
+          Format.eprintf "Typpx.Forge.Exp: %a is not accessible in this scope@." Printtyp.longident lid;
           assert false
     with Not_found ->
-      Format.eprintf "Typpx.Forge.Exp: %a is not accessible in this scope@." Longident.format lid;
+      Format.eprintf "Typpx.Forge.Exp: %a is not accessible in this scope@." Printtyp.longident lid;
       assert false
     
   let none ?(ty=Dummy.type_expr) ev =
@@ -174,10 +172,21 @@ module Exp = struct
       
   open Asttypes
 
+  let ghost l = { l with Location.loc_ghost = true }
   let mark txt e =
-    { e with exp_attributes= ({txt; loc= Ppxx.Helper.ghost e.exp_loc}, Parsetree.PStr []) 
+    { e with exp_attributes= ({txt; loc= ghost e.exp_loc}, Parsetree.PStr []) 
                              :: e.exp_attributes }
-      
+
+  let partition_map f xs =
+    let rec part left right = function
+      | [] -> rev left, rev right
+      | x::xs ->
+          match f x with
+          | `Left v -> part (v::left) right xs
+          | `Right v -> part left (v::right) xs
+    in
+    part [] [] xs
+
   let partition_marks e f =
     let g = function
       | {txt}, Parsetree.PStr [] when f txt -> `Left txt
