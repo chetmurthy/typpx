@@ -69,7 +69,7 @@ end) = struct
 
   let debug () = if Debug.debug then begin
     Format.eprintf "tool_name: %s@." (Ast_mapper.tool_name ());
-    Format.eprintf "@[<2>include_dirs: @[<v>%a@]@]@." (Ppxx.Utils.List.format "@ " Format.pp_print_string) !Clflags.include_dirs
+    Fmt.(pf stderr "@[<2>include_dirs: @[<v>%a@]@]@." (list ~sep:sp string) !Clflags.include_dirs)
   end
       
   (* The PPX mapper *)

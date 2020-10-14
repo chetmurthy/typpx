@@ -9,6 +9,5 @@ dev-repo: "hg://https://bitbucket.org/camlspotter/typpx"
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {build & >= "1.0"}
-  "ppxx" {>= "2.3.0" & < "2.4.0"}
 ]
 available: [ocaml-version >= "4.06.0" & ocaml-version < "4.07.0"]

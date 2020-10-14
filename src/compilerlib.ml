@@ -1,6 +1,5 @@
 (* Extension of compilier_libs modules *)
 
-open Ppxx.Utils
 open List
 
 module Ident = struct
@@ -27,7 +26,7 @@ module Path = struct
     | Pdot (p, name, n) -> fprintf ppf "%a.%s__%d" format_verbose p name n
     | Papply (p1, p2) -> fprintf ppf "%a(%a)" format_verbose p1 format_verbose p2
 
-  let to_string l = ksprintf (fun x -> x) "%a" format l
+  let to_string l = Fmt.(str "%a" format l)
 end
   
 module Ctype = struct
@@ -48,7 +47,7 @@ module Ctype = struct
 *)
   include Ctype
     
-  let expand_head env ty = expand_head env & correct_levels ty
+  let expand_head env ty = expand_head env (correct_levels ty)
   let apply env tys ty tys2 =
     apply env (map correct_levels tys) (correct_levels ty) (map correct_levels tys2)
   let moregeneral env b ty1 ty2 = moregeneral env b (correct_levels ty1) (correct_levels ty2)
@@ -60,7 +59,12 @@ module XTypes = struct
   open Ctype
   let repr_desc ty = (repr ty).desc
 
-  let expand_repr_desc env ty = (repr & expand_head env ty).desc
+  let expand_repr_desc env ty = (repr (expand_head env ty)).desc
+
+  let protect f = try Ok (f ()) with e -> Error e
+  let unprotect = function
+    | Ok v -> v
+    | Error e -> raise e
 
   let with_snapshot f =
     let snapshot = snapshot () in
@@ -76,9 +80,10 @@ module XTypes = struct
     | Some (po, [ty]) when po = Predef.path_option -> Some ty
     | _ -> None
 
+  let flip f x y = f y x
   let gen_vars ty =
-    flip filter (Ctype.free_variables ty) & fun ty ->
-      ty.level = Btype.generic_level
+    flip filter (Ctype.free_variables ty) (fun ty ->
+      ty.level = Btype.generic_level)
 
   (* Create a type which can be unified only with itself *)
   let create_uniq_type =
@@ -88,15 +93,15 @@ module XTypes = struct
       (* Ident.create is not good. Unifying this data type ident with
          a tvar may cause "escaping the scope" errors
       *)
-      Ctype.newty ( Tconstr ( Pident (Ident.create_persistent & "*uniq*" ^ string_of_int !cntr), [], ref Mnil ) )
+      Ctype.newty ( Tconstr ( Pident (Ident.create_persistent ("*uniq*" ^ string_of_int !cntr)), [], ref Mnil ) )
 
-  let close_gen_vars ty = flip iter (gen_vars ty) & fun gv ->
+  let close_gen_vars ty = flip iter (gen_vars ty) (fun gv ->
     match repr_desc gv with
     | Tvar _ ->
         Ctype.unify Env.empty gv (create_uniq_type ());
        (* eprintf "Closing %a@." Printtyp.type_expr gv *)
     | Tunivar _ -> ()
-    | _ -> assert false
+    | _ -> assert false)
 end
 
 module Types = struct

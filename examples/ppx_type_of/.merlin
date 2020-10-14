@@ -3,8 +3,6 @@ B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/fmt
 B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ocaml-migrate-parsetree
 B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ocaml/compiler-libs
 B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ppx_derivers
-B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ppx_tools_versioned
-B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ppxx
 B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/result
 B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/seq
 B /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/stdlib-shims
@@ -14,8 +12,6 @@ S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/fmt
 S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ocaml-migrate-parsetree
 S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ocaml/compiler-libs
 S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ppx_derivers
-S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ppx_tools_versioned
-S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/ppxx
 S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/result
 S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/seq
 S /home/chet/Hack/Ocaml/GENERIC/4.06.0/lib/stdlib-shims

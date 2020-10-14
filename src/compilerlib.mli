@@ -1,4 +1,3 @@
-open Ppxx.Utils
 
 module Ident : sig
   include module type of struct include Ident end
