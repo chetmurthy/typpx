@@ -1,0 +1,8 @@
+#!/bin/bash
+
+OCAMLSRC=$1
+
+for f in typeclass.ml  typecore.ml  typecore.mli  typemod.ml  typemod.mli
+do
+  diff -Bbwiu $OCAMLSRC/typing/$f my_$f
+done
