@@ -113,13 +113,6 @@ let update_location loc = function
   | err -> err
 let () = Typetexp.typemod_update_location := update_location
 
-module ImplementationHooks = Misc.MakeHooks(struct
-    type t = Typedtree.structure * Typedtree.module_coercion
-  end)
-module InterfaceHooks = Misc.MakeHooks(struct
-    type t = Typedtree.signature
-  end)
-
 open Typedtree
 
 let rec path_concat head p =
@@ -1196,18 +1189,14 @@ and transl_signature env sg =
             sg,
             final_env
         | Psig_typesubst sdecls ->
-            List.iter (fun td ->
-              if td.ptype_kind <> Ptype_abstract || td.ptype_manifest = None ||
-                 td.ptype_private = Private
-              then
-                (* This error should be a parsing error,
-                   once we have nice error messages there. *)
-                raise (Error (td.ptype_loc, env, Invalid_type_subst_rhs))
-            ) sdecls;
             let (decls, newenv) =
               Typedecl.transl_type_decl env Nonrecursive sdecls
             in
             List.iter (fun td ->
+              if td.typ_kind <> Ttype_abstract || td.typ_manifest = None ||
+                 td.typ_private = Private
+              then
+                raise (Error (td.typ_loc, env, Invalid_type_subst_rhs));
               let info =
                   let subst =
                     Subst.add_type_function (Pident td.typ_id)
@@ -2321,9 +2310,6 @@ let type_toplevel_phrase env s =
   Env.reset_required_globals ();
   let (str, sg, to_remove_from_sg, env) =
     type_structure ~toplevel:true false None env s Location.none in
-  let (str, _coerce) = ImplementationHooks.apply_hooks
-      { Misc.sourcefile = "//toplevel//" } (str, Tcoerce_none)
-  in
   (str, sg, to_remove_from_sg, env)
 
 let type_module_alias = type_module ~alias:true true false None
@@ -2504,16 +2490,12 @@ let type_implementation sourcefile outputprefix modulename initial_env ast =
              (Array.of_list (Cmt_format.get_saved_types ())))
           (Some sourcefile) initial_env None)
 
-let type_implementation sourcefile outputprefix modulename initial_env ast =
-  ImplementationHooks.apply_hooks { Misc.sourcefile }
-    (type_implementation sourcefile outputprefix modulename initial_env ast)
-
 let save_signature modname tsg outputprefix source_file initial_env cmi =
   Cmt_format.save_cmt  (outputprefix ^ ".cmti") modname
     (Cmt_format.Interface tsg) (Some source_file) initial_env (Some cmi)
 
-let type_interface sourcefile env ast =
-  InterfaceHooks.apply_hooks { Misc.sourcefile } (transl_signature env ast)
+let type_interface env ast =
+  transl_signature env ast
 
 (* "Packaging" of several compilation units into one unit
    having them as sub-modules.  *)

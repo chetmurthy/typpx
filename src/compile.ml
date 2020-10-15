@@ -29,7 +29,7 @@ module Make(Typemod : S.Typemod)(TypedTransformation : S.TypedTransformation) = 
 let tool_name = "ocamlc"
 
 let interface ppf sourcefile outputprefix ast =
-  Compmisc.init_path false;
+  Compmisc.init_path ();
   let modulename = module_of_filename sourcefile outputprefix in
   Env.set_unit_name modulename;
   let initial_env = Compmisc.initial_env () in
@@ -37,7 +37,7 @@ let interface ppf sourcefile outputprefix ast =
 
   if !Clflags.dump_parsetree then fprintf ppf "%a@." Printast.interface ast;
   if !Clflags.dump_source then fprintf ppf "%a@." Pprintast.signature ast;
-  let tsg = Typemod.type_interface sourcefile initial_env ast in
+  let tsg = Typemod.type_interface initial_env ast in
   if !Clflags.dump_typedtree then fprintf ppf "%a@." Printtyped.interface tsg;
   let sg = tsg.sig_type in
   if !Clflags.print_types then
@@ -59,7 +59,7 @@ let print_if ppf flag printer arg =
 let (++) x f = f x
 
 let implementation ppf sourcefile outputprefix ast =
-  Compmisc.init_path false;
+  Compmisc.init_path ();
   let modulename = module_of_filename sourcefile outputprefix in
   Env.set_unit_name modulename;
   let env = Compmisc.initial_env() in
