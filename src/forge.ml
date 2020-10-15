@@ -95,7 +95,7 @@ module Exp = struct
 
   let letmodule id pres mexpr e =
     { (Dummy.exp ()) with 
-      exp_desc = Texp_letmodule (id, loc (Ident.name id), pres, mexpr, e) }
+      exp_desc = Texp_letmodule (id, loc (Option.map Ident.name id), pres, mexpr, e) }
 
   let app e les =
     match les with
@@ -128,7 +128,7 @@ module Exp = struct
   let check_constructor_is_for_path ev s path =
     let lid = Longident.Lident s in
     try
-      let cdesc = Env.lookup_constructor lid ev in
+      let cdesc = Env.find_constructor_by_name lid ev in
       match (Ctype.repr cdesc.cstr_res).desc with
       | Tconstr (p, _, _) when p = path -> ()
       | _ -> 
@@ -140,11 +140,11 @@ module Exp = struct
     
   let none ?(ty=Dummy.type_expr) ev =
     check_constructor_is_for_path ev "None" Predef.path_option; 
-    Typecore.option_none ty !default_loc
+    Typecore.option_none ev ty !default_loc
       
   let some ev e =
     check_constructor_is_for_path ev "Some" Predef.path_option; 
-    Typecore.option_some e
+    Typecore.option_some ev e
 
   let list ev es =
     check_constructor_is_for_path ev "::" Predef.path_list;
@@ -153,8 +153,8 @@ module Exp = struct
       | [] -> Dummy.type_expr
       | e::_ -> e.exp_type
     in
-    let cnull = Env.lookup_constructor (Longident.Lident "[]") ev in
-    let ccons = Env.lookup_constructor (Longident.Lident "::") ev in
+    let cnull = Env.find_constructor_by_name (Longident.Lident "[]") ev in
+    let ccons = Env.find_constructor_by_name (Longident.Lident "::") ev in
     let null ty = 
       { (Dummy.exp ()) with
         exp_desc = Texp_construct ( loc (Longident.Lident "[]"),
@@ -217,7 +217,7 @@ end
 
 module MB = struct
   let module_binding id pres x = { mb_id = id
-                            ; mb_name = loc (Ident.name id)
+                            ; mb_name = loc (Option.map Ident.name id)
                             ; mb_presence = pres
                             ; mb_expr = x
                             ; mb_attributes = []

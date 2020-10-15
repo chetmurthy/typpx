@@ -21,6 +21,7 @@ let test env ty vdesc =
   res
 
 let resolve_overloading exp lidloc path = 
+  let loc = lidloc.Location.loc in
   let env = exp.exp_env in
 
   let name = get_name path in
@@ -36,11 +37,11 @@ let resolve_overloading exp lidloc path =
     List.fold_right (fun sitem st -> match sitem with
     | Sig_value (id, _vdesc, _) when Ident.name id = name -> 
         let lident = Longident.Ldot (Untypeast.lident_of_path path, Ident.name id) in
-        let path, vdesc = Env.lookup_value lident env  in
+        let path, vdesc = Env.lookup_value ~loc:loc lident env  in
         if test env exp.exp_type vdesc then (path, vdesc) :: st else st
     | Sig_module (id, _, _mty, _, _) -> 
         let lident = Longident.Ldot (Untypeast.lident_of_path path, Ident.name id) in
-        let path = Env.lookup_module ~load:true (*?*) lident env  in
+        let (path, _) = Env.lookup_module ~use:true ~loc:loc (*?*) lident env  in
         let moddecl = Env.find_module path env in
         find_candidates path moddecl.Types.md_type @ st
     | _ -> st) sg []
@@ -57,7 +58,7 @@ let resolve_overloading exp lidloc path =
       find_candidates path moddecl.Types.md_type @ st) lid_opt env []
   with
   | [] -> 
-     Location.raise_errorf ~loc:lidloc.Asttypes.loc "Overload resolution failed: no match"
+     Location.raise_errorf ~loc:loc "Overload resolution failed: no match"
   | [path, vdesc] -> 
       (* Format.eprintf "RESOLVED: %a@." print_path path; *)
       let ity = Ctype.instance vdesc.val_type in
