@@ -62,8 +62,8 @@ module Path = struct
   open Path
   type t = Path.t
   let rec of_lident = function
-    | Lident s -> Pident (Ident.create s)
-    | Ldot (t,s) -> Pdot (of_lident t, s, 0)
+    | Lident s -> Pident (Ident.create_local s)
+    | Ldot (t,s) -> Pdot (of_lident t, s)
     | Lapply (t1,t2) -> Papply (of_lident t1, of_lident t2)
 end
 
@@ -78,8 +78,9 @@ module Exp = struct
   (* directly embed Parsetree.expression *)    
   let untyped pexp = 
     { (Dummy.exp ()) 
-      with exp_attributes= [ {txt="typpx_embed"; loc= !default_loc}, 
-                             PStr ([ Ast_helper.Str.eval pexp ]) ] }
+      with exp_attributes= [ {attr_name={txt="typpx_embed"; loc= !default_loc}; 
+                              attr_payload=PStr ([ Ast_helper.Str.eval pexp ]);
+                              attr_loc = !default_loc } ] }
 
   let ident p = 
     { (Dummy.exp ()) with
@@ -92,9 +93,9 @@ module Exp = struct
                           e)
     }
 
-  let letmodule id mexpr e =
+  let letmodule id pres mexpr e =
     { (Dummy.exp ()) with 
-      exp_desc = Texp_letmodule (id, loc (Ident.name id), mexpr, e) }
+      exp_desc = Texp_letmodule (id, loc (Ident.name id), pres, mexpr, e) }
 
   let app e les =
     match les with
@@ -112,7 +113,7 @@ module Exp = struct
 
   let fun_ ?(label=Nolabel) c_lhs e =
     let cases = [ {c_lhs; c_guard=None; c_rhs= e} ] in
-    let param = Typecore.name_pattern "param" cases in
+    let param = Typecore.name_pattern "param" [c_lhs] in
     { e with exp_desc = Texp_function { arg_label= label
                                       ; param
                                       ; cases
@@ -174,7 +175,9 @@ module Exp = struct
 
   let ghost l = { l with Location.loc_ghost = true }
   let mark txt e =
-    { e with exp_attributes= ({txt; loc= ghost e.exp_loc}, Parsetree.PStr []) 
+    { e with exp_attributes= {attr_name={txt; loc= ghost e.exp_loc};
+                              attr_payload=Parsetree.PStr [];
+                              attr_loc = ghost e.exp_loc} 
                              :: e.exp_attributes }
 
   let partition_map f xs =
@@ -189,7 +192,7 @@ module Exp = struct
 
   let partition_marks e f =
     let g = function
-      | {txt}, Parsetree.PStr [] when f txt -> `Left txt
+      | {Parsetree.attr_name={txt}; attr_payload=Parsetree.PStr [];_} when f txt -> `Left txt
       | a -> `Right a
     in
     let marks, exp_attributes = partition_map g e.exp_attributes in
@@ -213,8 +216,9 @@ module Pat = struct
 end
 
 module MB = struct
-  let module_binding id x = { mb_id = id
+  let module_binding id pres x = { mb_id = id
                             ; mb_name = loc (Ident.name id)
+                            ; mb_presence = pres
                             ; mb_expr = x
                             ; mb_attributes = []
                             ; mb_loc = !default_loc 

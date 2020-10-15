@@ -1,15 +1,15 @@
 module Num = struct
   module Int = struct
-    let (+) = Pervasives.(+)
+    let (+) = Stdlib.(+)
   end
   
   module Float = struct
-    let (+) = Pervasives.(+.)
+    let (+) = Stdlib.(+.)
   end
 end
 
 module String = struct
-  let (+) = Pervasives.(^)
+  let (+) = Stdlib.(^)
 end
 
 module Loaded = struct

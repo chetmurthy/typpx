@@ -1,21 +1,21 @@
 module Num = struct
   module Int = struct
-    let (+) = Pervasives.(+)
+    let (+) = Stdlib.(+)
   end
   
   module Float = struct
-    let (+) = Pervasives.(+.)
+    let (+) = Stdlib.(+.)
   end
 end
 
 module String = struct
-  let (+) = Pervasives.(^)
+  let (+) = Stdlib.(^)
 end
 
 module Loaded = struct
   module Num = Num
   module String = String
-  external (+) : 'a -> 'a -> 'a = "%OVERLOADED"
+  external (+) : 'a -> 'a -> 'a = "__OVERLOADED"
 end
 
 module Test = struct

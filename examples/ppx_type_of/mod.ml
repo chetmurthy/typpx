@@ -1,12 +1,9 @@
 open Asttypes
 open Typedtree
 
-module MapArg : TypedtreeMap.MapArgument = struct
-  include TypedtreeMap.DefaultMapArgument
-
-  let enter_expression e =
+  let expr sub e =
     match e.exp_desc with
-    | Texp_apply ({ exp_desc= Texp_ident(Pdot(Pident id, "type_of", _), _, _) }, args) when Ident.name id = "Ppx_type_of" ->
+    | Texp_apply ({ exp_desc= Texp_ident(Pdot(Pident id, "type_of"), _, _) }, args) when Ident.name id = "Ppx_type_of" ->
         begin match args with
         | [Nolabel, Some ({ exp_type= ty } as _a) ] ->
             let s =
@@ -21,9 +18,12 @@ module MapArg : TypedtreeMap.MapArgument = struct
 
         | _ -> assert false (* better error handling required *)
         end
-    | _ -> e
+    | _ -> Tast_mapper.default.expr sub e
         
-  let leave_expression e = e
-end
+let mapper = { Tast_mapper.default with
+               expr = expr }
 
-module Map = TypedtreeMap.MakeMap(MapArg)
+module Map = struct
+  let map_structure st = mapper.structure mapper st
+  let map_signature sg = mapper.signature mapper sg
+end

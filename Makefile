@@ -17,7 +17,7 @@ TESTDIRS=ppx_curried_constr ppx_overload ppx_type_of
 test::  clean all uninstall install
 	for i in $(TESTDIRS); do make -C examples/$$i/tests clean test ; done
 
-OCAMLVERS=07
+OCAMLVERS=08
 OCAMLSRC=/home/chet/Hack/Ocaml/GENERIC/4.$(OCAMLVERS).0/.opam-switch/sources/ocaml-base-compiler.4.$(OCAMLVERS).0
 
 diffs::

@@ -1,10 +1,10 @@
 module Loaded = struct
   val%overloaded (+) : 'a -> 'a -> 'a
   module Int = struct
-    let (+) = Pervasives.(+)
+    let (+) = Stdlib.(+)
   end
   module Float = struct
-    let (+) = Pervasives.(+.)
+    let (+) = Stdlib.(+.)
   end
 end
 

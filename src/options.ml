@@ -25,7 +25,8 @@ module Options = Main_args.Make_bytecomp_options (struct
   let set r () = r := true
   let unset r () = r := false
   let _a = set make_archive
-  let _absname = set Location.absname
+  let _absname = set Clflags.absname
+  let _alert = Warnings.parse_alert_option
   let _annot = set annotations
   let _binannot = set binary_annotations
   let _c = set compile_only
@@ -34,13 +35,29 @@ module Options = Main_args.Make_bytecomp_options (struct
   let _ccopt s = first_ccopts := s :: !first_ccopts
   let _compat_32 = set bytecode_compatible_32
   let _config = show_config
+  let _config_var = Misc.show_config_variable_and_exit
   let _custom = set custom_runtime
   let _no_check_prims = set no_check_prims
   let _dllib s = defer (ProcessDLLs (Misc.rev_split_words s))
   let _dllpath s = dllpaths := !dllpaths @ [s]
   let _for_pack s = for_package := Some s
   let _g = set debug
-  let _i () = print_types := true; compile_only := true
+  let _i () =
+    print_types := true;
+    compile_only := true;
+    stop_after := Some Compiler_pass.Typing;
+    ()
+  let _stop_after pass =
+    let module P = Compiler_pass in
+    begin match P.of_string pass with
+    | None -> () (* this should not occur as we use Arg.Symbol *)
+    | Some pass ->
+        stop_after := Some pass;
+        begin match pass with
+        | P.Parsing | P.Typing ->
+            compile_only := true
+        end;
+    end
   let _I s = include_dirs := s :: !include_dirs
   let _impl = impl
   let _intf = intf
@@ -89,7 +106,7 @@ module Options = Main_args.Make_bytecomp_options (struct
   let _vmthread = set use_vmthreads
   let _unboxed_types = set unboxed_types
   let _no_unboxed_types = unset unboxed_types
-  let _unsafe = set fast
+  let _unsafe = set unsafe
   let _unsafe_string = set unsafe_string
   let _use_prims s = use_prims := s
   let _use_runtime s = use_runtime := s
@@ -99,14 +116,13 @@ module Options = Main_args.Make_bytecomp_options (struct
   let _w = (Warnings.parse_options false)
   let _warn_error = (Warnings.parse_options true)
   let _warn_help = Warnings.help_warnings
-  let _color option =
-    begin match parse_color_setting option with
-          | None -> ()
-          | Some setting -> color := Some setting
-    end
+  let _color = Misc.set_or_ignore color_reader.parse color
+  let _error_style = Misc.set_or_ignore error_style_reader.parse error_style
   let _where = print_standard_library
   let _verbose = set verbose
   let _nopervasives = set nopervasives
+  let _match_context_rows n = match_context_rows := n
+  let _dump_into_file = set dump_into_file
   let _dno_unique_ids = unset unique_ids
   let _dunique_ids = set unique_ids  
   let _dsource = set dump_source
@@ -115,6 +131,7 @@ module Options = Main_args.Make_bytecomp_options (struct
   let _drawlambda = set dump_rawlambda
   let _dlambda = set dump_lambda
   let _dinstr = set dump_instr
+  let _dcamlprimc = set keep_camlprimc_file
   let _dtimings () = assert false
   let _dprofile () = assert false
 

@@ -6,7 +6,6 @@ module type Typemod = sig
     Typedtree.structure * Typedtree.module_coercion
   val type_interface:
     string -> Env.t -> Parsetree.signature -> Typedtree.signature
-  val simplify_signature: Types.signature -> Types.signature
 end
 
 module type TypedTransformation = sig

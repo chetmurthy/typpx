@@ -1,16 +1,16 @@
 open Types
 open Typedtree
 
-let print_ident ppf id = Format.fprintf ppf "%s/%d" (Ident.name id) (Ident.binding_time id)
+let print_ident ppf id = Ident.print ppf id
 
 let rec print_path ppf = function
   | Path.Pident id -> print_ident ppf id
-  | Path.Pdot (p, name, n) -> Format.fprintf ppf "%a.%s__%d" print_path p name n
+  | Path.Pdot (p, name) -> Format.fprintf ppf "%a.%s" print_path p name
   | Path.Papply (p1, p2) -> Format.fprintf ppf "%a(%a)" print_path p1 print_path p2
 
 let get_name = function
   | Path.Pident id -> Ident.name id
-  | Path.Pdot (_, name, _) -> name
+  | Path.Pdot (_, name) -> name
   | Path.Papply _ -> assert false
 
 let test env ty vdesc =
@@ -34,11 +34,11 @@ let resolve_overloading exp lidloc path =
       | _ -> assert false
     in
     List.fold_right (fun sitem st -> match sitem with
-    | Sig_value (id, _vdesc) when Ident.name id = name -> 
+    | Sig_value (id, _vdesc, _) when Ident.name id = name -> 
         let lident = Longident.Ldot (Untypeast.lident_of_path path, Ident.name id) in
         let path, vdesc = Env.lookup_value lident env  in
         if test env exp.exp_type vdesc then (path, vdesc) :: st else st
-    | Sig_module (id, _mty, _) -> 
+    | Sig_module (id, _, _mty, _, _) -> 
         let lident = Longident.Ldot (Untypeast.lident_of_path path, Ident.name id) in
         let path = Env.lookup_module ~load:true (*?*) lident env  in
         let moddecl = Env.find_module path env in
@@ -48,7 +48,7 @@ let resolve_overloading exp lidloc path =
   
   let lid_opt = match path with
     | Path.Pident _ -> None
-    | Path.Pdot (p, _, _) -> Some (Untypeast.lident_of_path p)
+    | Path.Pdot (p, _) -> Some (Untypeast.lident_of_path p)
     | Path.Papply _ -> assert false
   in
 
@@ -68,17 +68,21 @@ let resolve_overloading exp lidloc path =
   | _ -> 
      Location.raise_errorf ~loc:lidloc.loc "Overload resolution failed: too ambiguous"
 
-module MapArg : TypedtreeMap.MapArgument = struct
-  include TypedtreeMap.DefaultMapArgument
-
-  let enter_expression = function
+let expr sub = function
     | ({ exp_desc= Texp_ident (path, lidloc, vdesc) } as e)-> 
         begin match vdesc.val_kind with
-        | Val_prim { Primitive.prim_name = "%OVERLOADED" } ->
+        | Val_prim { Primitive.prim_name = "__OVERLOADED" } ->
            resolve_overloading e lidloc path
         | _ -> e
         end
-    | e -> e
-end
+    | e -> Tast_mapper.default.expr sub e
 
-module Map = TypedtreeMap.MakeMap(MapArg)
+let mapper = {
+  Tast_mapper.default with
+  expr = expr
+}
+
+module Map = struct
+  let map_structure st = mapper.structure mapper st
+  let map_signature sg = mapper.signature mapper sg
+end

@@ -30,7 +30,7 @@ let tool_name = "ocamlc"
 
 let interface ppf sourcefile outputprefix ast =
   Compmisc.init_path false;
-  let modulename = module_of_filename ppf sourcefile outputprefix in
+  let modulename = module_of_filename sourcefile outputprefix in
   Env.set_unit_name modulename;
   let initial_env = Compmisc.initial_env () in
   (* let ast = Pparse.parse_interface ~tool_name ppf sourcefile in *)
@@ -43,7 +43,7 @@ let interface ppf sourcefile outputprefix ast =
   if !Clflags.print_types then
     Printtyp.wrap_printing_env ~error:false initial_env (fun () ->
         fprintf std_formatter "%a@."
-          Printtyp.signature (Typemod.simplify_signature sg));
+          Printtyp.signature sg);
   ignore (Includemod.signatures initial_env sg sg);
   Typecore.force_delayed_checks ();
   Warnings.check_fatal ();
@@ -60,7 +60,7 @@ let (++) x f = f x
 
 let implementation ppf sourcefile outputprefix ast =
   Compmisc.init_path false;
-  let modulename = module_of_filename ppf sourcefile outputprefix in
+  let modulename = module_of_filename sourcefile outputprefix in
   Env.set_unit_name modulename;
   let env = Compmisc.initial_env() in
   try

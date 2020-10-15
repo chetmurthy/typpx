@@ -15,7 +15,7 @@ end
 module Loaded = struct
   module Num = Num
   module String = String
-  external (+) : 'a -> 'a -> 'a = "%OVERLOADED"
+  external (+) : 'a -> 'a -> 'a = "__OVERLOADED"
 end
 
 module Test = struct

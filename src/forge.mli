@@ -55,6 +55,7 @@ module Exp : sig
 
   val letmodule :
     Ident.t ->
+    module_presence ->
     module_expr -> expression -> expression
 
   val app :
@@ -108,7 +109,7 @@ end
 
 module MB : sig
   val module_binding :
-    Ident.t -> module_expr -> module_binding
+    Ident.t -> module_presence -> module_expr -> module_binding
 end
 
 module Mod : sig

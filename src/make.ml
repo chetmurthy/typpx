@@ -9,7 +9,7 @@ module Embed = struct
 
   let extend super = 
     let expr self e = match e.pexp_attributes with
-      | [ {txt="typpx_embed"}, PStr [ { pstr_desc= Pstr_eval (e, []) } ] ] -> e
+      | [ {attr_name={txt="typpx_embed"}; attr_payload=PStr [ { pstr_desc= Pstr_eval (e, []) } ];_} ] -> e
       | _ -> super.expr self e
     in
     { super with expr }
@@ -116,18 +116,18 @@ end) = struct
         in
         let warn_and_error_of_error = function
           | Location.Error e ->
-              Some (Ast_mapper.attribute_of_warning e.Location.loc e.Location.msg,
+              Some (Ast_mapper.attribute_of_warning e.Location.main.loc (Format.asprintf "%t" e.Location.main.txt),
                     Ast_mapper.extension_of_error e)
           | exn ->
              match Location.error_of_exn exn with
              | Some (`Ok e) -> 
-                 Some (Ast_mapper.attribute_of_warning e.Location.loc e.Location.msg,
+                 Some (Ast_mapper.attribute_of_warning e.Location.main.loc (Format.asprintf "%t" e.Location.main.txt),
                        Ast_mapper.extension_of_error e)
              | Some `Already_displayed -> None
              | None ->
                 let loc = Location.in_file !Location.input_name in
                 let e = Location.errorf ~loc "Uncaught exception: %s" (Printexc.to_string exn) in
-                Some (Ast_mapper.attribute_of_warning e.Location.loc e.Location.msg,
+                Some (Ast_mapper.attribute_of_warning e.Location.main.loc (Format.asprintf "%t" e.Location.main.txt),
                       Ast_mapper.extension_of_error e)
         in
         let structure _x str =

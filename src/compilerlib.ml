@@ -5,10 +5,10 @@ open List
 module Ident = struct
   include Ident
 
-  open Format
+  open! Format
     
   let format ppf id = Ident.print ppf id
-  let format_verbose ppf id = fprintf ppf "%s/%d" (Ident.name id) (Ident.binding_time id)
+  let format_verbose ppf id = Ident.print_with_scope ppf id
 end
 
 module Path = struct
@@ -18,12 +18,12 @@ module Path = struct
 
   let rec format ppf = function
     | Pident id -> Ident.format ppf id
-    | Pdot (p, name, _n) -> fprintf ppf "%a.%s" format p name
+    | Pdot (p, name) -> fprintf ppf "%a.%s" format p name
     | Papply (p1, p2) -> fprintf ppf "%a(%a)" format p1 format p2
 
   let rec format_verbose ppf = function
     | Pident id -> Ident.format_verbose ppf id
-    | Pdot (p, name, n) -> fprintf ppf "%a.%s__%d" format_verbose p name n
+    | Pdot (p, name) -> fprintf ppf "%a.%s" format_verbose p name
     | Papply (p1, p2) -> fprintf ppf "%a(%a)" format_verbose p1 format_verbose p2
 
   let to_string l = Fmt.(str "%a" format l)
