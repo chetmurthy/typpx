@@ -7,8 +7,8 @@ module Ident = struct
 
   open Format
     
-  let format ppf id = pp_print_string ppf id.name
-  let format_verbose ppf id = fprintf ppf "%s/%d" id.name id.stamp
+  let format ppf id = Ident.print ppf id
+  let format_verbose ppf id = fprintf ppf "%s/%d" (Ident.name id) (Ident.binding_time id)
 end
 
 module Path = struct

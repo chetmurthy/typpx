@@ -214,7 +214,7 @@ end
 
 module MB = struct
   let module_binding id x = { mb_id = id
-                            ; mb_name = loc id.name
+                            ; mb_name = loc (Ident.name id)
                             ; mb_expr = x
                             ; mb_attributes = []
                             ; mb_loc = !default_loc 

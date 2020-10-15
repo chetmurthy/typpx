@@ -6,7 +6,7 @@ module MapArg : TypedtreeMap.MapArgument = struct
 
   let enter_expression e =
     match e.exp_desc with
-    | Texp_apply ({ exp_desc= Texp_ident(Pdot(Pident {Ident.name= "Ppx_type_of"}, "type_of", _), _, _) }, args) ->
+    | Texp_apply ({ exp_desc= Texp_ident(Pdot(Pident id, "type_of", _), _, _) }, args) when Ident.name id = "Ppx_type_of" ->
         begin match args with
         | [Nolabel, Some ({ exp_type= ty } as _a) ] ->
             let s =

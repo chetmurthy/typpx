@@ -1,7 +1,7 @@
 open Types
 open Typedtree
 
-let print_ident ppf id = Format.fprintf ppf "%s/%d" id.Ident.name id.Ident.stamp
+let print_ident ppf id = Format.fprintf ppf "%s/%d" (Ident.name id) (Ident.binding_time id)
 
 let rec print_path ppf = function
   | Path.Pident id -> print_ident ppf id
@@ -15,7 +15,7 @@ let get_name = function
 
 let test env ty vdesc =
   let snapshot = Btype.snapshot () in
-  let ity = Ctype.instance env vdesc.val_type in
+  let ity = Ctype.instance vdesc.val_type in
   let res = try  Ctype.unify env ty ity; true with _ -> false in
   Btype.backtrack snapshot;
   res
@@ -60,7 +60,7 @@ let resolve_overloading exp lidloc path =
      Location.raise_errorf ~loc:lidloc.Asttypes.loc "Overload resolution failed: no match"
   | [path, vdesc] -> 
       (* Format.eprintf "RESOLVED: %a@." print_path path; *)
-      let ity = Ctype.instance env vdesc.val_type in
+      let ity = Ctype.instance vdesc.val_type in
       Ctype.unify env exp.exp_type ity; (* should succeed *)
       { exp with 
         exp_desc = Texp_ident (path, {lidloc with Asttypes.txt = Untypeast.lident_of_path path}, vdesc);
