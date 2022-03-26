@@ -3,6 +3,12 @@ reason I'm doing this is that I can't contact Jun and find out if
 they're still maintaining their project.  If I find out that `typpx`
 is still actively maintained, this will disappear.
 
+NOTE2: IIUC Jun's original code was distributed under the LGPL.  I've
+added the LGPL here also.  But if there are any questions, Jun's
+original repo and his intentions shall govern.  As far as I'm
+concerned, I'm just caretaking this code: it remains his code and
+project.
+
 # TyPPX: Library for PPX with Types
 
 TyPPX is a library to build PPX'es with types.  Typing the input Parsetree
